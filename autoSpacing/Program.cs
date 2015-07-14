@@ -3,7 +3,6 @@
     #region
 
     using System;
-    using System.Drawing;
     using System.Globalization;
     using System.Linq;
 
@@ -12,6 +11,9 @@
 
     using SFXLibrary;
     using SFXLibrary.Extensions.SharpDX;
+
+    using Color = SharpDX.Color;
+    using Font = SharpDX.Direct3D9.Font;
 
     #endregion
 
