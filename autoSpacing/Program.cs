@@ -37,8 +37,7 @@
         private static void OnLoad(EventArgs args)
         {
             player = ObjectManager.Player;
-            autoSpacingText = MDrawing.GetFont(menu.Item("AutoSpacing.FontSize").GetValue<Slider>().Value);
-
+            
             menu = new Menu("autoSpacing", "menu", true);
 
             menu.AddItem(new MenuItem("autoSpacing.PlayerAA", "Player AA range").SetValue(true));
@@ -53,6 +52,7 @@
                     new MenuItem(whitelistMenu.Name + enemy.ChampionName, enemy.ChampionName).SetValue(false));
             }
 
+            autoSpacingText = MDrawing.GetFont(menu.Item("AutoSpacing.FontSize").GetValue<Slider>().Value);
             menu.AddToMainMenu();
 
             Drawing.OnEndScene += OnDrawingEndScene;
@@ -86,12 +86,18 @@
                     var r3 = r2 - r1;
                     if (playerAa)
                     {
-                        Drawing.DrawText(pos.X, pos.Y, Color.White, r1.ToString(CultureInfo.InvariantCulture));
+                        autoSpacingText.DrawTextCentered(
+                            r1.ToString(CultureInfo.InvariantCulture),
+                            Drawing.WorldToScreen(player.Position),
+                            Color.White);
                     }
 
                     if (targetAa)
                     {
-                        Drawing.DrawText(pos.X, pos.Y - 25, Color.White, r2.ToString(CultureInfo.InvariantCulture));
+                        autoSpacingText.DrawTextCentered(
+                            r2.ToString(CultureInfo.InvariantCulture),
+                            Drawing.WorldToScreen(player.Position),
+                            Color.White);
                     }
 
                     if (comparison)
