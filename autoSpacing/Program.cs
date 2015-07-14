@@ -58,7 +58,7 @@
             Drawing.OnEndScene += OnDrawingEndScene;
         }
 
-        private void OnDrawingEndScene(EventArgs args)
+        private static void OnDrawingEndScene(EventArgs args)
         {
             if (Drawing.Direct3DDevice == null || Drawing.Direct3DDevice.IsDisposed)
             {
@@ -76,7 +76,6 @@
                         && menu.Item("autoSpacing.Whitelist" + e.ChampionName).GetValue<bool>()
                         && e.Distance(player) < 2000f))
                 {
-                    var pos = Drawing.WorldToScreen(player.Position);
                     var r1 =
                         Math.Round((enemy.Distance(player.Position) - enemy.AttackRange - player.BoundingRadius) / 5f)
                         * 5;

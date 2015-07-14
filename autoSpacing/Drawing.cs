@@ -26,7 +26,7 @@
             }
         }
 
-        public static Font GetFont(int fontSize)
+        public static System.Drawing.Font GetFont(int fontSize)
         {
             Font font;
             {
