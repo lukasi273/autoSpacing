@@ -52,7 +52,7 @@
                     new MenuItem(whitelistMenu.Name + enemy.ChampionName, enemy.ChampionName).SetValue(false));
             }
 
-            autoSpacingText = MDrawing.GetFont(menu.Item("AutoSpacing.FontSize").GetValue<Slider>().Value);
+            autoSpacingText = MDrawing.GetFont(menu.Item("autoSpacing.FontSize").GetValue<Slider>().Value);
             menu.AddToMainMenu();
 
             Drawing.OnEndScene += OnDrawingEndScene;
