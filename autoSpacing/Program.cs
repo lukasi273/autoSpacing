@@ -11,6 +11,7 @@
     using LeagueSharp.Common;
 
     using SFXLibrary;
+    using SFXLibrary.Extensions.SharpDX;
 
     #endregion
 
