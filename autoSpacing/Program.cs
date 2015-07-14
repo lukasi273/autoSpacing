@@ -8,10 +8,11 @@
     using System.Linq;
 
     using LeagueSharp;
-    using LeagueSharp.Common;
-
-    using SFXLibrary;
-    using SFXLibrary.Extensions.SharpDX;
+    using LeagueSharp.SDK.Core;
+    using LeagueSharp.SDK.Core.Extensions;
+    using LeagueSharp.SDK.Core.Extensions.SharpDX;
+    using LeagueSharp.SDK.Core.UI.IMenu;
+    using LeagueSharp.SDK.Core.UI.IMenu.Values;
 
     using SharpDX;
     using SharpDX.Direct3D9;
@@ -36,7 +37,7 @@
 
         private static bool comparison;
 
-        private static Menu menu;
+        private static Menu config;
 
         private static Obj_AI_Hero player;
 
@@ -68,27 +69,27 @@
             CustomEvents.Game.OnGameLoad += OnLoad;
         }
 
-        private static void OnLoad(EventArgs args)
+        private static void OnLoad()
         {
             player = ObjectManager.Player;
 
-            menu = new Menu("autoSpacing", "menu", true);
+            config = new Menu("autoSpacing", "menu", true);
 
-            menu.AddItem(new MenuItem("autoSpacing.TargetAA", "Target AA range").SetValue(true));
-            menu.AddItem(new MenuItem("autoSpacing.PlayerAA", "Player AA range").SetValue(true));
-            menu.AddItem(new MenuItem("autoSpacing.Comparison", "Comparison between the two").SetValue(true));
-            menu.AddItem(
-                new MenuItem("autoSpacing.FontSize", "Font size (F5 required)").SetValue(new Slider(13, 3, 30)));
+            config.Add(new MenuBool("autoSpacing.TargetAA", "Target AA range", true));
+            config.Add(new MenuBool("autoSpacing.PlayerAA", "Player AA range", true));
+            config.Add(new MenuBool("autoSpacing.Comparison", "Comparison between the two", true));
+            config.Add(
+                new MenuSlider("autoSpacing.FontSize", "Font size (F5 required)", 13, 3, 30));
 
-            var whitelistMenu = menu.AddSubMenu(new Menu("Pick a target", "autoSpacing.Whitelist"));
+            var whitelistMenu = config.Add(new Menu("autoSpacing.Whitelist", "Pick a target"));
             foreach (var enemy in GameObjects.EnemyHeroes)
             {
-                whitelistMenu.AddItem(
-                    new MenuItem(whitelistMenu.Name + enemy.ChampionName, enemy.ChampionName).SetValue(false));
+                whitelistMenu.Add(
+                    new MenuBool(whitelistMenu.Name + enemy.ChampionName, enemy.ChampionName));
             }
 
-            autoSpacingText = MDrawing.GetFont(menu.Item("autoSpacing.FontSize").GetValue<Slider>().Value);
-            menu.AddToMainMenu();
+            autoSpacingText = MDrawing.GetFont(config["autoSpacing.FontSize"].GetValue<MenuSlider>().Value);
+            config.Attach();
 
             Drawing.OnEndScene += OnDrawingEndScene;
             Game.OnUpdate += OnUpdate;
@@ -101,20 +102,20 @@
                 return;
             }
 
-            playerAa = menu.Item("autoSpacing.TargetAA").GetValue<bool>();
-            targetAa = menu.Item("autoSpacing.PlayerAA").GetValue<bool>();
-            comparison = menu.Item("autoSpacing.Comparison").GetValue<bool>();
+            playerAa = config["autoSpacing.TargetAA"].GetValue<MenuBool>().Value;
+            targetAa = config["autoSpacing.PlayerAA"].GetValue<MenuBool>().Value;
+            comparison = config["autoSpacing.Comparison"].GetValue<MenuBool>().Value;
             {
                 foreach (var enemy in
                     GameObjects.EnemyHeroes.Where(
                         e =>
                         !e.IsDead && e.IsVisible && e.Position.IsOnScreen()
-                        && menu.Item("autoSpacing.Whitelist" + e.ChampionName).GetValue<bool>()
-                        && e.Distance(player) < 2000f))
+                        && (config["autoSpacing.Whitelist" + e.ChampionName].GetValue<MenuBool>().Value
+                        && e.Distance(player) < 2000f)))
                 {
                     if (playerAa)
                     {
-                        autoSpacingText.DrawTextCentered(
+                        autoSpacingText.DrawText(
                             R1[enemy.NetworkId].ToString(CultureInfo.InvariantCulture), 
                             Drawing.WorldToScreen((Vector3)player.Position.To2D()), 
                             Color.White);
@@ -122,7 +123,7 @@
 
                     if (targetAa)
                     {
-                        autoSpacingText.DrawTextCentered(
+                        autoSpacingText.DrawText(
                             R2[enemy.NetworkId].ToString(CultureInfo.InvariantCulture), 
                             Drawing.WorldToScreen((Vector3)player.Position.To2D()), 
                             Color.White);
@@ -130,7 +131,7 @@
 
                     if (comparison)
                     {
-                        autoSpacingText.DrawTextCentered(
+                        autoSpacingText.DrawText(
                             R3[enemy.NetworkId].ToString(CultureInfo.InvariantCulture), 
                             Drawing.WorldToScreen((Vector3)player.Position.To2D()), 
                             Color.White);
