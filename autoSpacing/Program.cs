@@ -15,6 +15,8 @@
     using LeagueSharp.SDK.Core.UI.IMenu;
     using LeagueSharp.SDK.Core.UI.IMenu.Values;
 
+    using SFXLibrary.Extensions.SharpDX;
+
     using SharpDX;
     using SharpDX.Direct3D9;
 
@@ -66,12 +68,13 @@
 
         private static void Main()
         {
-            GameObjects.Initialize();
             Load.OnLoad += OnLoad;
         }
 
         private static void OnLoad(object sender, EventArgs e)
         {
+            Bootstrap.Init(null);
+
             player = ObjectManager.Player;
 
             config = new Menu("autoSpacing", "menu", true);
@@ -116,25 +119,25 @@
                 {
                     if (playerAa)
                     {
-                        autoSpacingText.DrawText(
+                        autoSpacingText.DrawTextCentered(
                             R1[enemy.NetworkId].ToString(CultureInfo.InvariantCulture), 
-                            Drawing.WorldToScreen((Vector3)player.Position.To2D()), 
+                            Drawing.WorldToScreen((Vector3)player.Position.ToVector2()), 
                             Color.White);
                     }
 
                     if (targetAa)
                     {
-                        autoSpacingText.DrawText(
+                        autoSpacingText.DrawTextCentered(
                             R2[enemy.NetworkId].ToString(CultureInfo.InvariantCulture), 
-                            Drawing.WorldToScreen((Vector3)player.Position.To2D()), 
+                            Drawing.WorldToScreen((Vector3)player.Position.ToVector2()), 
                             Color.White);
                     }
 
                     if (comparison)
                     {
-                        autoSpacingText.DrawText(
+                        autoSpacingText.DrawTextCentered(
                             R3[enemy.NetworkId].ToString(CultureInfo.InvariantCulture), 
-                            Drawing.WorldToScreen((Vector3)player.Position.To2D()), 
+                            Drawing.WorldToScreen((Vector3)player.Position.ToVector2()), 
                             Color.White);
                     }
                 }
