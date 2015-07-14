@@ -9,6 +9,7 @@
 
     using LeagueSharp;
     using LeagueSharp.SDK.Core;
+    using LeagueSharp.SDK.Core.Events;
     using LeagueSharp.SDK.Core.Extensions;
     using LeagueSharp.SDK.Core.Extensions.SharpDX;
     using LeagueSharp.SDK.Core.UI.IMenu;
@@ -66,10 +67,10 @@
         private static void Main()
         {
             GameObjects.Initialize();
-            CustomEvents.Game.OnGameLoad += OnLoad;
+            Load.OnLoad += OnLoad;
         }
 
-        private static void OnLoad()
+        private static void OnLoad(object sender, EventArgs e)
         {
             player = ObjectManager.Player;
 
